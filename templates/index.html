@@ -1,150 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Age Calculator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Calculate your precise age in years, months, days, and seconds with our premium Advanced Age Calculator.">
+    <title>Age Calculator</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/hourglass.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}?v={{ range(100000, 999999) | random }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Fonts: Outfit for a modern, premium feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" id="calendar-theme">
 </head>
+
 <body>
-    <div class="container">
+    <!-- Animated Background Elements -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="glass-container">
         <header>
             <div class="logo">
-                <i class="fas fa-hourglass-half"></i>
-                <h1>Age Calculator</h1>
+                <div class="logo-icon">
+                    <i class="fas fa-hourglass-start"></i>
+                </div>
+                <h1>Age<span class="highlight">Chrono</span></h1>
             </div>
-            <button id="theme-toggle">
+            <button id="theme-toggle" aria-label="Toggle Dark Mode">
                 <i class="fas fa-moon"></i>
             </button>
         </header>
 
-        <div class="calculator">
-            <form id="age-form" method="POST" action="/">
-                <div class="input-group">
-                    <label for="birth_date"><i class="fas fa-birthday-cake"></i> Birth Date</label>
-                    <input type="date" id="birth_date" name="birth_date" required>
+        <main class="calculator-content">
+            <div class="calculator-panel">
+                <div class="panel-header">
+                    <h2>Calculate Age</h2>
+                    <p>Discover your precise time on Earth</p>
                 </div>
-                
-                <div class="input-group">
-                    <label for="current_date"><i class="fas fa-calendar-day"></i> Current Date</label>
-                    <input type="date" id="current_date" name="current_date" required>
-                </div>
-                
-                <button type="submit" class="calculate-btn">
-                    <span class="btn-icon"><i class="fas fa-calculator"></i></span>
-                    <span class="btn-text">Calculate Age</span>
-                </button>
-            </form>
 
-            {% if error %}
-            <div class="error-message">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>{{ error }}</p>
-            </div>
-            {% endif %}
+                <form id="age-form">
+                    <div class="input-group">
+                        <label for="birth_date">
+                            Date of Birth
+                            <div class="date-input-wrapper">
+                                <input type="text" id="birth_date" name="birth_date" placeholder="Select Date" required
+                                    readonly>
+                                <span class="icon-wrapper"><i class="far fa-calendar"></i></span>
+                            </div>
+                        </label>
+                    </div>
 
-            {% if result %}
-            <div class="result" id="result-section">
-                <h2>Your Age Details</h2>
-                
-                <div class="realtime-counter">
-                    <div class="counter-value" id="seconds-counter" data-seconds="{{ result.total_seconds }}">
-                        {{ result.seconds }}
+                    <div class="input-group">
+                        <label for="current_date">
+                            Today's Date
+                            <div class="date-input-wrapper">
+                                <input type="text" id="current_date" name="current_date" placeholder="Select Date" required
+                                    readonly>
+                                <span class="icon-wrapper"><i class="far fa-calendar-check"></i></span>
+                            </div>
+                        </label>
                     </div>
-                    <div class="counter-label">seconds</div>
-                </div>
-                
-                <div class="age-cards">
-                    <div class="age-card years">
-                        <div class="card-icon">
-                            <i class="fas fa-user-clock"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Precise Age</h3>
-                            <p>{{ result.years_months_days }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="age-card months">
-                        <div class="card-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>In Months</h3>
-                            <p>{{ result.months }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="age-card weeks">
-                        <div class="card-icon">
-                            <i class="fas fa-calendar-week"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>In Weeks</h3>
-                            <p>{{ result.weeks }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="age-card days">
-                        <div class="card-icon">
-                            <i class="fas fa-sun"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>In Days</h3>
-                            <p>{{ result.days }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="age-card hours">
-                        <div class="card-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>In Hours</h3>
-                            <p>{{ result.hours }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="age-card minutes">
-                        <div class="card-icon">
-                            <i class="fas fa-stopwatch"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>In Minutes</h3>
-                            <p>{{ result.minutes }}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="share-options">
-                    <button id="share-btn" class="share-btn">
-                        <i class="fas fa-share-alt"></i> Share Results
+
+                    <button type="submit" class="calculate-btn">
+                        <span class="btn-text">Reveal Age</span>
+                        <div class="btn-glow"></div>
+                        <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
                     </button>
-                    <button id="download-btn" class="download-btn">
-                        <i class="fas fa-download"></i> Download
+                </form>
+
+                <div id="error-message" class="notification error" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="error-text"></span>
+                </div>
+            </div>
+
+            <div class="result-panel" id="result-section" style="display: none;">
+                <div class="result-header">
+                    <h3>Your Journey</h3>
+                    <div class="live-indicator">
+                        <span class="pulse"></span> Live
+                    </div>
+                </div>
+
+                <div class="main-stats">
+                    <div class="stat-card featured">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h4 class="counter-value" id="seconds-counter" data-seconds="0">
+                                0
+                            </h4>
+                            <p>Total Seconds</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detailed-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Years</div>
+                        <div class="stat-value highlight-text" id="years-val">0</div>
+                        <div class="stat-sub" id="full-age-text">0 years, 0 months, 0 days</div>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="mini-stat">
+                            <span class="label">Months</span>
+                            <span class="value" id="months-val">0</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="label">Weeks</span>
+                            <span class="value" id="weeks-val">0</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="label">Days</span>
+                            <span class="value" id="days-val">0</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="label">Hours</span>
+                            <span class="value" id="hours-val">0</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="label">Minutes</span>
+                            <span class="value" id="minutes-val">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button id="share-btn" class="action-btn" title="Share">
+                        <i class="fas fa-share-nodes"></i>
+                    </button>
+                    <button id="download-btn" class="action-btn" title="Download">
+                        <i class="fas fa-download"></i>
                     </button>
                 </div>
             </div>
-            {% endif %}
-        </div>
-        
+        </main>
+
         <footer>
-            <p>&copy; 2025 Advanced Age Calculator | <a href="#" id="open-about">About</a></p>
+            <p>&copy; 2025 Age Chrono. Crafted with <i class="fas fa-heart"></i> by <a href="#"
+                    id="open-about">Abhishek Kumar</a></p>
         </footer>
     </div>
-    
+
     <!-- Modal -->
-    <div id="about-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>About This App</h2>
-            <p>Advanced Age Calculator is a modern web application that accurately calculates your age in different time units. Use it to discover how many years, months, days, hours, minutes, and seconds you've been alive!</p>
-            <p>Built with Flask, JavaScript, and modern CSS.</p>
+    <div id="about-modal" class="modal-backdrop">
+        <div class="modal-glass">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-info-circle"></i></div>
+                <h2>About Age Chrono</h2>
+            </div>
+            <div class="modal-body">
+                <p>Experience time differently. Age Chrono provides precise insights into your life's duration with a
+                    beautiful, distraction-free interface.</p>
+                <div class="tech-stack">
+                    <span>Flask</span>
+                    <span>Glassmorphism</span>
+                    <span>Interaction</span>
+                </div>
+            </div>
         </div>
     </div>
-    
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>

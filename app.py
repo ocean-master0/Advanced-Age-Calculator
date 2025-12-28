@@ -44,31 +44,9 @@ def calculate_age(birth_date, current_date):
     except Exception as e:
         return {"error": f"Calculation error: {str(e)}"}
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    result = None
-    error = None
-    
-    if request.method == 'POST':
-        try:
-            birth_date = request.form.get('birth_date')
-            current_date = request.form.get('current_date')
-            
-            if not birth_date or not current_date:
-                error = "Please enter both birth date and current date"
-            else:
-                result = calculate_age(birth_date, current_date)
-                if "error" in result:
-                    error = result["error"]
-                    result = None
-        except Exception as e:
-            error = f"An error occurred: {str(e)}"
-    
-    # Default to today if not a POST request
-    if not result and not error:
-        today = datetime.now().strftime("%Y-%m-%d")
-        
-    return render_template('index.html', result=result, error=error)
+    return render_template('index.html')
 
 @app.route('/api/calculate', methods=['POST'])
 def api_calculate():
