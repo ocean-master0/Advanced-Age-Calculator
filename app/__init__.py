@@ -71,3 +71,5 @@ def register_health_endpoint(app):
     @app.route('/health')
     def health():
         return {'status': 'healthy', 'service': 'age-calculator', 'version': '2.0.0'}, 200
+
+app = create_app(os.environ.get('FLASK_ENV', 'default'))
