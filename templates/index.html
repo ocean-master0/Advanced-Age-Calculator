@@ -5,183 +5,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Calculate your precise age in years, months, days, and seconds with our premium Advanced Age Calculator.">
+        content="Calculate your precise age in years, months, days, and seconds with our premium Age Calculator.">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; script-src 'self'; img-src 'self' https://img.icons8.com data:; connect-src 'self';">
     <title>Age Calculator</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/hourglass.png">
 
-    <!-- CSS -->
-    <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}?v={{ range(100000, 999999) | random }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Fonts: Outfit for a modern, premium feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" id="calendar-theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ '%Y%m%d%H%M' | strftime }}">
 </head>
 
 <body>
-    <!-- Animated Background Elements -->
-    <div class="background-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-    </div>
+    <div class="dot-bg"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
 
     <div class="glass-container">
         <header>
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-hourglass-start"></i>
+                <div class="logo-icon" aria-hidden="true">
+                    <i class="bi bi-hourglass-split"></i>
                 </div>
-                <h1>Age<span class="highlight">Chrono</span></h1>
+                <h1>Age<span class="highlight">Calculator</span></h1>
             </div>
-            <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                <i class="fas fa-moon"></i>
+            <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+                <i class="bi bi-moon-stars-fill"></i>
             </button>
         </header>
 
         <main class="calculator-content">
-            <div class="calculator-panel">
+            <div class="calculator-panel glass-card">
                 <div class="panel-header">
-                    <h2>Calculate Age</h2>
+                    <h2><i class="bi bi-calculator-fill" aria-hidden="true"></i> Calculate Age</h2>
                     <p>Discover your precise time on Earth</p>
                 </div>
 
-                <form id="age-form">
+                <form id="age-form" novalidate>
                     <div class="input-group">
                         <label for="birth_date">
-                            Date of Birth
-                            <div class="date-input-wrapper">
-                                <input type="text" id="birth_date" name="birth_date" placeholder="Select Date" required
-                                    readonly>
-                                <span class="icon-wrapper"><i class="far fa-calendar"></i></span>
-                            </div>
+                            <i class="bi bi-calendar-heart" aria-hidden="true"></i> Date of Birth
                         </label>
+                        <div class="date-input-wrapper">
+                            <input type="text" id="birth_date" name="birth_date" placeholder="Select Date" required
+                                readonly autocomplete="off" aria-required="true">
+                            <span class="icon-wrapper" aria-hidden="true"><i class="bi bi-calendar3"></i></span>
+                        </div>
                     </div>
 
                     <div class="input-group">
                         <label for="current_date">
-                            Today's Date
-                            <div class="date-input-wrapper">
-                                <input type="text" id="current_date" name="current_date" placeholder="Select Date" required
-                                    readonly>
-                                <span class="icon-wrapper"><i class="far fa-calendar-check"></i></span>
-                            </div>
+                            <i class="bi bi-calendar-check" aria-hidden="true"></i> Today's Date
                         </label>
+                        <div class="date-input-wrapper">
+                            <input type="text" id="current_date" name="current_date" placeholder="Select Date" required
+                                readonly autocomplete="off" aria-required="true">
+                            <span class="icon-wrapper" aria-hidden="true"><i class="bi bi-calendar3"></i></span>
+                        </div>
                     </div>
 
-                    <button type="submit" class="calculate-btn">
+                    <button type="submit" class="calculate-btn" id="calculate-btn">
                         <span class="btn-text">Reveal Age</span>
+                        <i class="bi bi-arrow-right-short btn-arrow" aria-hidden="true"></i>
                         <div class="btn-glow"></div>
-                        <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
                     </button>
                 </form>
 
-                <div id="error-message" class="notification error" style="display: none;">
-                    <i class="fas fa-exclamation-circle"></i>
+                <div id="error-message" class="notification error" role="alert" style="display: none;">
+                    <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
                     <span class="error-text"></span>
                 </div>
             </div>
 
-            <div class="result-panel" id="result-section" style="display: none;">
+            <div class="result-panel glass-card" id="result-section" style="display: none;" aria-live="polite">
                 <div class="result-header">
-                    <h3>Your Journey</h3>
+                    <h3><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Your Journey</h3>
                     <div class="live-indicator">
-                        <span class="pulse"></span> Live
+                        <span class="pulse" aria-hidden="true"></span> Live
                     </div>
                 </div>
 
                 <div class="main-stats">
                     <div class="stat-card featured">
-                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></div>
                         <div class="stat-info">
-                            <h4 class="counter-value" id="seconds-counter" data-seconds="0">
-                                0
-                            </h4>
-                            <p>Total Seconds</p>
+                            <h4 class="counter-value" id="seconds-counter" aria-live="off">0</h4>
+                            <p>Total Seconds Alive</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="detailed-stats">
                     <div class="stat-card">
-                        <div class="stat-label">Years</div>
+                        <div class="stat-label"><i class="bi bi-person-badge" aria-hidden="true"></i> Your Age</div>
                         <div class="stat-value highlight-text" id="years-val">0</div>
                         <div class="stat-sub" id="full-age-text">0 years, 0 months, 0 days</div>
                     </div>
 
                     <div class="stat-grid">
                         <div class="mini-stat">
-                            <span class="label">Months</span>
+                            <i class="bi bi-calendar-month stat-icon-sm" aria-hidden="true"></i>
                             <span class="value" id="months-val">0</span>
+                            <span class="label">Months</span>
                         </div>
                         <div class="mini-stat">
-                            <span class="label">Weeks</span>
+                            <i class="bi bi-calendar-week stat-icon-sm" aria-hidden="true"></i>
                             <span class="value" id="weeks-val">0</span>
+                            <span class="label">Weeks</span>
                         </div>
                         <div class="mini-stat">
-                            <span class="label">Days</span>
+                            <i class="bi bi-sun stat-icon-sm" aria-hidden="true"></i>
                             <span class="value" id="days-val">0</span>
+                            <span class="label">Days</span>
                         </div>
                         <div class="mini-stat">
-                            <span class="label">Hours</span>
+                            <i class="bi bi-clock stat-icon-sm" aria-hidden="true"></i>
                             <span class="value" id="hours-val">0</span>
+                            <span class="label">Hours</span>
                         </div>
                         <div class="mini-stat">
-                            <span class="label">Minutes</span>
+                            <i class="bi bi-stopwatch stat-icon-sm" aria-hidden="true"></i>
                             <span class="value" id="minutes-val">0</span>
+                            <span class="label">Minutes</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="action-bar">
-                    <button id="share-btn" class="action-btn" title="Share">
-                        <i class="fas fa-share-nodes"></i>
+                    <button id="share-btn" class="action-btn" title="Share your age" aria-label="Share your age">
+                        <i class="bi bi-share-fill"></i>
                     </button>
-                    <button id="download-btn" class="action-btn" title="Download">
-                        <i class="fas fa-download"></i>
+                    <button id="download-btn" class="action-btn" title="Download report" aria-label="Download age report">
+                        <i class="bi bi-download"></i>
                     </button>
                 </div>
             </div>
         </main>
 
         <footer>
-            <p>&copy; 2025 Age Chrono. Crafted with <i class="fas fa-heart"></i> by <a href="#"
-                    id="open-about">Abhishek Kumar</a></p>
+            <p>&copy; 2025 Age Calculator. Crafted with <i class="bi bi-heart-fill text-danger" aria-hidden="true"></i> by
+                <a href="#" id="open-about" aria-label="About Age Calculator">Abhishek Kumar</a>
+            </p>
         </footer>
     </div>
 
-    <!-- Modal -->
-    <div id="about-modal" class="modal-backdrop">
+    <div id="about-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display: none;">
         <div class="modal-glass">
-            <button class="close-modal">&times;</button>
+            <button class="close-modal" aria-label="Close modal">&times;</button>
             <div class="modal-header">
-                <div class="modal-icon"><i class="fas fa-info-circle"></i></div>
-                <h2>About Age Chrono</h2>
+                <div class="modal-icon" aria-hidden="true"><i class="bi bi-info-circle-fill"></i></div>
+                <h2 id="modal-title">About Age Calculator</h2>
             </div>
             <div class="modal-body">
-                <p>Experience time differently. Age Chrono provides precise insights into your life's duration with a
+                <p>Experience time differently. Age Calculator provides precise insights into your life's duration with a
                     beautiful, distraction-free interface.</p>
                 <div class="tech-stack">
-                    <span>Flask</span>
-                    <span>Glassmorphism</span>
-                    <span>Interaction</span>
+                    <span><i class="bi bi-lightning-fill" aria-hidden="true"></i> Flask</span>
+                    <span><i class="bi bi-droplet" aria-hidden="true"></i> Glassmorphism</span>
+                    <span><i class="bi bi-phone" aria-hidden="true"></i> Responsive</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}?v={{ '%Y%m%d%H%M' | strftime }}"></script>
 </body>
 
 </html>
